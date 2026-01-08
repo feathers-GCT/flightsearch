@@ -1,0 +1,12 @@
+.git
+.venv
+__pycache__
+*.pyc
+.python-version
+.gemini
+test_server.py
+README.md
+uv.lock
+pyproject.toml
+Dockerfile
+.dockerignore
