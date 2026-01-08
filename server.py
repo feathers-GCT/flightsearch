@@ -176,9 +176,14 @@ if __name__ == "__main__":
     # Check if PORT environment variable is set (typical for Cloud Run)
     port_env = os.environ.get("PORT")
     if port_env:
+        print(f"Starting MCP server in SSE mode on 0.0.0.0:{port_env}")
         # Run with SSE transport if PORT is specified
         # host="0.0.0.0" is required for Cloud Run to perform health checks
-        mcp.run(transport="sse", host="0.0.0.0", port=int(port_env))
+        try:
+            mcp.run(transport="sse", host="0.0.0.0", port=int(port_env))
+        except Exception as e:
+            print(f"Failed to start SSE server: {e}")
+            raise
     else:
-        # Otherwise, default to stdio transport (Claude Desktop, etc.)
+        print("Starting MCP server in stdio mode")
         mcp.run(transport="stdio")

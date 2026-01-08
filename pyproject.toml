@@ -3,8 +3,8 @@ name = "flightmcp"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "httpx>=0.28.1",
-    "mcp[cli]>=1.25.0",
+    "mcp[cli,sse]>=1.25.0",
 ]
