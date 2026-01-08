@@ -177,7 +177,8 @@ if __name__ == "__main__":
     port_env = os.environ.get("PORT")
     if port_env:
         # Run with SSE transport if PORT is specified
-        mcp.run(transport="sse", port=int(port_env))
+        # host="0.0.0.0" is required for Cloud Run to perform health checks
+        mcp.run(transport="sse", host="0.0.0.0", port=int(port_env))
     else:
         # Otherwise, default to stdio transport (Claude Desktop, etc.)
         mcp.run(transport="stdio")
