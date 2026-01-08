@@ -173,4 +173,11 @@ async def search_flights(
         return f"An unexpected error occurred: {str(e)}"
 
 if __name__ == "__main__":
-    mcp.run()
+    # Check if PORT environment variable is set (typical for Cloud Run)
+    port_env = os.environ.get("PORT")
+    if port_env:
+        # Run with SSE transport if PORT is specified
+        mcp.run(transport="sse", port=int(port_env))
+    else:
+        # Otherwise, default to stdio transport (Claude Desktop, etc.)
+        mcp.run(transport="stdio")
