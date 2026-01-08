@@ -6,7 +6,5 @@ __pycache__
 .gemini
 test_server.py
 README.md
-uv.lock
-pyproject.toml
 Dockerfile
 .dockerignore
