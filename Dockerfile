@@ -11,11 +11,10 @@ ENV UV_COMPILE_BYTECODE=1
 # Copy from the cache instead of linking since it's a container
 ENV UV_LINK_MODE=copy
 
-# Install the project's dependencies using the lockfile and pyproject.toml
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project --no-dev
+# Install the project's dependencies
+# We copy explicitly since Cloud Build might not have BuildKit enabled
+COPY uv.lock pyproject.toml ./
+RUN uv sync --frozen --no-install-project --no-dev
 
 # Place /app/.venv/bin/ at the beginning of the PATH
 ENV PATH="/app/.venv/bin:$PATH"
