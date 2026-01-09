@@ -4,6 +4,7 @@ import time
 from typing import Optional
 from mcp.server.fastmcp import FastMCP
 import httpx
+import uvicorn
 
 # Create an MCP server
 mcp = FastMCP("FlightSearch")
@@ -180,8 +181,9 @@ if __name__ == "__main__":
         # Run with SSE transport if PORT is specified
         # host="0.0.0.0" is required for Cloud Run to perform health checks
         try:
-            # Explicitly bind to 0.0.0.0 for Cloud Run to pass health checks
-            mcp.run(transport="sse", host="0.0.0.0", port=int(port_env))
+            # Use uvicorn directly to bind to 0.0.0.0 and the specified port
+            # FastMCP provides access to the underlying Starlette app
+            uvicorn.run(mcp.starlette_app, host="0.0.0.0", port=int(port_env))
         except Exception as e:
             print(f"Failed to start SSE server: {e}")
             raise
