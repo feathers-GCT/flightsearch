@@ -7,5 +7,4 @@ requires-python = ">=3.12"
 dependencies = [
     "httpx>=0.28.1",
     "mcp[cli,sse]>=1.25.0",
-    "uvicorn>=0.34.0",
 ]

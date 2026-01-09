@@ -4,7 +4,12 @@ import time
 from typing import Optional
 from mcp.server.fastmcp import FastMCP
 import httpx
-import uvicorn
+import asyncio
+import logging
+
+# Set up logging
+logger = logging.getLogger(__name__)
+logging.basicConfig(format="[%(levelname)s]: %(message)s", level=logging.INFO)
 
 # Create an MCP server
 mcp = FastMCP("FlightSearch")
@@ -177,16 +182,17 @@ if __name__ == "__main__":
     # Check if PORT environment variable is set (typical for Cloud Run)
     port_env = os.environ.get("PORT")
     if port_env:
-        print(f"Starting MCP server in SSE mode on 0.0.0.0:{port_env}")
-        # Run with SSE transport if PORT is specified
+        port = int(port_env)
+        logger.info(f"🚀 MCP server started on port {port}")
+        # Use run_async as recommended by Google Cloud Run tutorial
         # host="0.0.0.0" is required for Cloud Run to perform health checks
-        try:
-            # Use uvicorn directly to bind to 0.0.0.0 and the specified port
-            # FastMCP provides access to the underlying Starlette app
-            uvicorn.run(mcp.starlette_app, host="0.0.0.0", port=int(port_env))
-        except Exception as e:
-            print(f"Failed to start SSE server: {e}")
-            raise
+        asyncio.run(
+            mcp.run_async(
+                transport="sse",
+                host="0.0.0.0",
+                port=port,
+            )
+        )
     else:
-        print("Starting MCP server in stdio mode")
+        logger.info("Starting MCP server in stdio mode")
         mcp.run(transport="stdio")
