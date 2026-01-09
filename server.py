@@ -180,7 +180,7 @@ if __name__ == "__main__":
         # Run with SSE transport if PORT is specified
         # host="0.0.0.0" is required for Cloud Run to perform health checks
         try:
-            mcp.run(transport="sse", host="0.0.0.0", port=int(port_env))
+            mcp.run(transport="sse", port=int(port_env))
         except Exception as e:
             print(f"Failed to start SSE server: {e}")
             raise
